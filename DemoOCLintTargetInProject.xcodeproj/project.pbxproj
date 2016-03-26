@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		7D0D4EA01CA5CC5700A2536C /* OCLint */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 7D0D4EA11CA5CC5700A2536C /* Build configuration list for PBXAggregateTarget "OCLint" */;
+			buildPhases = (
+				7D0D4EA41CA5CC8300A2536C /* OCLint Run Script */,
+			);
+			dependencies = (
+			);
+			name = OCLint;
+			productName = OCLint;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		7D0D4E6C1CA5CBDF00A2536C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D0D4E6B1CA5CBDF00A2536C /* main.m */; };
 		7D0D4E6F1CA5CBDF00A2536C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D0D4E6E1CA5CBDF00A2536C /* AppDelegate.m */; };
@@ -219,6 +233,9 @@
 						CreatedOnToolsVersion = 7.2;
 						TestTargetID = 7D0D4E661CA5CBDF00A2536C;
 					};
+					7D0D4EA01CA5CC5700A2536C = {
+						CreatedOnToolsVersion = 7.2;
+					};
 				};
 			};
 			buildConfigurationList = 7D0D4E621CA5CBDF00A2536C /* Build configuration list for PBXProject "DemoOCLintTargetInProject" */;
@@ -237,6 +254,7 @@
 				7D0D4E661CA5CBDF00A2536C /* DemoOCLintTargetInProject */,
 				7D0D4E821CA5CBDF00A2536C /* DemoOCLintTargetInProjectTests */,
 				7D0D4E8D1CA5CBDF00A2536C /* DemoOCLintTargetInProjectUITests */,
+				7D0D4EA01CA5CC5700A2536C /* OCLint */,
 			);
 		};
 /* End PBXProject section */
@@ -267,6 +285,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7D0D4EA41CA5CC8300A2536C /* OCLint Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "OCLint Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"Building ${TARGET_NAME}\"\nmaxPriority=15000\n#Add OCLint bin directory to PATH\nexport PATH=/usr/local/Cellar/oclint/0.10.2/bin:$PATH\n#Set Build path\nBUILD_PATH=${TARGET_TEMP_DIR}\n#Check whether OCLint exists or not\nhash oclint &> /dev/null\nif [ $? -eq 1 ]; then\n    echo \"oclint not found, analyzing stopped\"\n    exit 1\nelse\n    echo \"Is installed\"\nfi\n#Navigate to build path directory\ncd ${BUILD_PATH}\n\nif [ ! -f compile_commands.json ]; then\n    echo \"compile_commands.json not found, possibly clean was performed\";\n    echo \"starting xcodebuild to rebuild the project..\";\nfi\n# clean previous output\nif [ -f xcodebuild.log ]; then\n    rm xcodebuild.log\nfi\n\ncd ${SRCROOT}\n\n#Clean the project\nxctool -project DemoOCLintTargetInProject.xcodeproj \\\n-configuration Debug -scheme DemoOCLintTargetInProject \\\n-sdk iphonesimulator clean\n#Build project\nxctool -project DemoOCLintTargetInProject.xcodeproj \\\n-configuration Debug -scheme DemoOCLintTargetInProject \\\n-sdk iphonesimulator  \\\n-reporter json-compilation-database:${BUILD_PATH}/compile_commands.json build\n\necho \"starting analyzing\"\ncd ${BUILD_PATH}\noclint-json-compilation-database -e Pods oclint_args oclint_args \\\n\"-max-priority-1=$maxPriority -max-priority-2=$maxPriority \\\n-max-priority-3=$maxPriority -rc LONG_LINE=500 \\\n-rc LONG_VARIABLE_NAME=100  -disable-rule=UnusedMethodParameter\" \\\n| sed 's/\\(.*\\.\\m\\{1,2\\}:[0-9]*:[0-9]*:\\)/\\1 warning:/'\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7D0D4E631CA5CBDF00A2536C /* Sources */ = {
@@ -481,6 +516,20 @@
 			};
 			name = Release;
 		};
+		7D0D4EA21CA5CC5700A2536C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		7D0D4EA31CA5CC5700A2536C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -500,6 +549,7 @@
 				7D0D4E991CA5CBDF00A2536C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7D0D4E9A1CA5CBDF00A2536C /* Build configuration list for PBXNativeTarget "DemoOCLintTargetInProjectTests" */ = {
 			isa = XCConfigurationList;
@@ -508,6 +558,7 @@
 				7D0D4E9C1CA5CBDF00A2536C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7D0D4E9D1CA5CBDF00A2536C /* Build configuration list for PBXNativeTarget "DemoOCLintTargetInProjectUITests" */ = {
 			isa = XCConfigurationList;
@@ -516,6 +567,16 @@
 				7D0D4E9F1CA5CBDF00A2536C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7D0D4EA11CA5CC5700A2536C /* Build configuration list for PBXAggregateTarget "OCLint" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7D0D4EA21CA5CC5700A2536C /* Debug */,
+				7D0D4EA31CA5CC5700A2536C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

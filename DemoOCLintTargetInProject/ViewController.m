@@ -23,5 +23,9 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+-(void)letsWriteAMethodWithLongNameXASDFASFASDFASDFASFASDFASDFASDFASDFASDFFDAF:(id)parame1 param2:(id)param2{
+    NSNumber *nm = @0;
+    NSNumber *aVariableWithLongerThanStandardNameItShouldCauseOCLintWarning = @9;
+}
 
 @end
